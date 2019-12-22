@@ -2,18 +2,7 @@ import React from 'react';
 import {
   Typography,
   makeStyles,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TableSortLabel,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Grid,
   Divider
 } from '@material-ui/core';
