@@ -40,6 +40,12 @@ const styles = makeStyles(theme => ({
   text: {
     margin: theme.spacing(1, 0),
   },
+  red: {
+    color: "#ef9a9a",
+  },
+  green: {
+    color: "#a5d6a7",
+  },
 }));
 
 function stakes(stakes) {
@@ -97,8 +103,8 @@ function covers(covers) {
           <Typography id={cover.id} color="textSecondary" variant="body2" className={classes.text}>
             <span>On {date}, for a {premium} ETH premium, user {cover.user.id.slice(0, 10)}... covered {cover.amount} ETH for {cover.daysToCover} days. </span>
             {claim
-              ? `A claim has been made with status ${claim.status} and verdict ${claim.verdict}. It has ${claim.voteCount} votes.`
-              : `No claims have been made.`
+              ? <span className={classes.red}>A claim has been made with status {claim.status} and verdict {claim.verdict}. It has {claim.voteCount} votes.</span>
+              : <span className={classes.green}>No claims have been made.</span>
             }
           </Typography>
         );
