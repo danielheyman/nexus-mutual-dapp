@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   Typography,
   makeStyles,
@@ -10,22 +10,19 @@ import {
   TableRow,
   Paper,
   TableSortLabel
-} from '@material-ui/core'
+} from '@material-ui/core';
+import InsuredContract from './InsuredContract';
 
 const styles = makeStyles(({
-  actionArea: {
-    width: 300,
-  },
-  content: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
   table: {
     minWidth: 700,
   },
   title: {
     marginBottom: 30,
     display: 'inline-block',
+  },
+  row: {
+    cursor: "pointer",
   }
 }));
 
@@ -55,6 +52,10 @@ function sumAmounts(items) {
   return items.reduce((agg, i) => agg + parseFloat(i.amount), 0);
 }
 
+function sumClaims(items) {
+  return items.reduce((agg, i) => agg + i.claims.length, 0);
+}
+
 export default function InsuredContracts({ contracts }) {
   const classes = styles();
   const [order, setOrder] = React.useState({
@@ -62,18 +63,24 @@ export default function InsuredContracts({ contracts }) {
     direction: 'asc',
     fn: c => c.id
   });
+  const [selected, setSelected] = React.useState(null);
+
+  if (selected) {
+    const contract = contracts.find(c => c.id === selected);
+    return <InsuredContract goBack={() => setSelected(null)} contract={contract} />;
+  }
 
   const sortedContracts = contracts.sort((a, b) => {
     if (order.direction === 'asc') {
       return order.fn(a) > order.fn(b) ? 1 : -1;
     }
     return order.fn(a) < order.fn(b) ? 1 : -1;
-  })
+  });
 
   return (
     <div className={classes.table}>
       <Typography variant="title" className={classes.title}>
-        Nexus Mutual dApp ({contracts.length} Insured Contracts!)
+        {contracts.length} Insured Contracts! You can sort them and click into them to learn more.
       </Typography>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
@@ -95,17 +102,24 @@ export default function InsuredContracts({ contracts }) {
                 order={order}
                 setOrder={setOrder}
                 align='right' />
+                <SortedHeader
+                  fn={c => sumClaims(c.covers)}
+                  label="Claim Count"
+                  order={order}
+                  setOrder={setOrder}
+                  align='right' />
             </TableRow>
           </TableHead>
           <TableBody>
             {sortedContracts.map(({ id, ens, covers, stakes }) => (
-              <TableRow key={id}>
+              <TableRow className={classes.row} hover key={id} onClick={() => setSelected(id)}>
                 <TableCell component="th" scope="row">{id}</TableCell>
                 <TableCell>{ens}</TableCell>
                 <TableCell align="right">{stakes.length}</TableCell>
                 <TableCell align="right">{sumAmounts(stakes)}</TableCell>
                 <TableCell align="right">{covers.length}</TableCell>
                 <TableCell align="right">{sumAmounts(covers)}</TableCell>
+                <TableCell align="right">{sumClaims(covers)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

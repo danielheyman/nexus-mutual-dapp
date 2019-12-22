@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import './App.css';
 import Error from './components/Error';
-import InsuredContracts from './components/InsurecContracts';
+import InsuredContracts from './components/InsuredContracts';
 import { GRAPHQL_ENDPOINTS } from './config';
 
 const useStyles = makeStyles(theme => ({
@@ -40,8 +40,14 @@ export default function App() {
         ens
         covers {
           id
+          daysToCover
+          created
+          premium
           amount
           status
+          user {
+            id
+          }
           claims {
             id
             submitDate
@@ -58,6 +64,14 @@ export default function App() {
         stakes {
           id
           amount
+          unlockedAmount
+          burntAmount
+          daysToStake
+          created
+          expires
+          user {
+            id
+          }
         }
       }
     }
